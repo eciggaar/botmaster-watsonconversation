@@ -2,4 +2,6 @@ node_modules
 slack_teams_info
 bower_components
 npm-debug.log
+views
+airport_entities.csv
 .env

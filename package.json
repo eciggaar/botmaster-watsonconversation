@@ -1,11 +1,13 @@
 {
-  "name": "santabot",
+  "name": "watson-botmaster",
   "version": "1.0.0",
-  "description": "santabot botmaster",
-  "main": "index.js",
+  "description": "Sample application that leverages botmaster and Watson Conversation",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint",
+    "lint": "eslint .",
+    "autofix": "eslint --fix ."
   },
   "author": "reece medway",
   "license": "ISC",
@@ -13,10 +15,19 @@
     "type": "git",
     "url": "santabotv2"
   },
+  "engines": {
+    "node": ">= 4.x",
+    "npm": "^3.10.8"
+  },
   "dependencies": {
     "request-promise": "^4.1.1",
-    "botmaster": "^2.2.3",
+    "botmaster": "^2.2.4",
     "cfenv": "^1.0.3",
-    "watson-developer-cloud": "^2.11.0"
+    "dotenv": "^4.0.0",
+    "request": "^2.72.0",
+    "node-rest-client": "^2.0.1",
+    "localize": "^0.4.7",
+    "moment": "^2.17.1",
+    "watson-developer-cloud": "^2.15.0"
   }
 }

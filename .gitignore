@@ -1,0 +1,5 @@
+node_modules
+slack_teams_info
+npm-debug.log
+*DS_Store
+.env

@@ -3,3 +3,5 @@ slack_teams_info
 npm-debug.log
 *DS_Store
 .env
+airport_entities.csv
+manifest.yml

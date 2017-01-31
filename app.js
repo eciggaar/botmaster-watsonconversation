@@ -1,11 +1,11 @@
 
 const Botmaster = require('botmaster');
-const watsonConversationStorageMiddleware = require('./watson_conversation_storage_middleware');
 const watson = require('watson-developer-cloud');
 const cfenv = require('cfenv');
 const dotenv = require('dotenv');
-const moment = require('moment');
 const request = require('request-promise');
+const incomingMiddleware = require('./middleware/incoming');
+
 
 const appEnv = cfenv.getAppEnv();
 
@@ -15,12 +15,8 @@ if (appEnv.isLocal) {
   dotenv.load();
 }
 
+const watsonConversationStorageMiddleware = require('./middleware/watson_conversation_storage');
 const skyscanner = require('./lib/api/skyscanner.js');
-
-// Set today and tomorrow's date in active language
-moment.locale(process.env.CONVERSATION_LANG);
-const today = moment();
-const tomorrow = moment(today).add(1, 'day');
 
 const watsonConversation = watson.conversation({
   username: process.env.WATSON_CONVERSATION_USERNAME,
@@ -51,65 +47,22 @@ const slackSettings = {
   storeTeamInfoInFile: true,
 };
 
+const botmasterSettings = {
+  port: appEnv.isLocal ? 3000 : appEnv.port,
+};
+
 const slackBot  = new Botmaster.botTypes.SlackBot(slackSettings);
-const botmaster = new Botmaster();
+const botmaster = new Botmaster(botmasterSettings);
 
 botmaster.addBot(slackBot);
 botmaster.addBot(messengerBot);
 
 botmaster.use('incoming', watsonConversationStorageMiddleware.retrieveSession);
+botmaster.use('incoming', { type: 'messenger' }, incomingMiddleware.userInfo.addUserInfoToUpdate);
 
 botmaster.on('update', (bot, update) => {
   console.log(update);
 
-  //In case bot type is Facebook, populate context with facebook user_profile info
-  if (bot.type === 'messenger') {
-    if (!update.session.context) {
-      const requestOptions = {
-        url: 'https://graph.facebook.com/v2.6/' + update.sender.id + '?access_token=' + process.env.FACEBOOK_PAGE_TOKEN,
-        json: true,
-      }
-
-      request(requestOptions)
-      .promise()
-      .bind(this)
-      .then((body) => {
-        update.session.context = {};
-        update.session.context.system = {
-          dialog_stack: ['root'],
-          dialog_turn_counter: 1,
-          dialog_request_counter: 1
-        };
-
-        update.session.context.firstname = body.first_name;
-        update.session.context.today = today.format('D') + ' ' + today.format('MMMM');
-        update.session.context.tomorrow = tomorrow.format('D') + ' ' + tomorrow.format('MMMM');
-
-        callWatson(bot, update);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-
-    } else {
-
-      callWatson(bot, update);
-    }
-  } else {
-
-    callWatson(bot, update);
-  }
-});
-
-botmaster.on('server running', (message) => {
-  console.log(message);
-});
-
-botmaster.on('error', (bot, err) => {
-  console.log(err.stack);
-});
-
-function callWatson(bot, update) {
   const messageForWatson = {
     context: update.session.context,
     workspace_id: process.env.WATSON_WORKSPACE_ID,
@@ -121,17 +74,22 @@ function callWatson(bot, update) {
   watsonConversation.message(messageForWatson, (err, watsonUpdate) => {
     watsonConversationStorageMiddleware.updateSession(update.sender.id, watsonUpdate);
 
-    const watsontext = watsonUpdate.output.text;
-    bot.sendTextCascadeTo(watsontext,update.sender.id)
-
     if (watsonUpdate.context.action === 'show_buttons') {
+      const watsontext = watsonUpdate.output.text;
+      const lastEntry = watsontext.pop();
 
-      console.log('inside show_buttons....TEXT: ' + JSON.stringify(watsonUpdate.output.text));
-      console.log('inside show_buttons....BUTTONS: ' + watsonUpdate.context.action);
-      const buttonArray = ['Ja', 'Nee'];
-      //bot.sendDefaultButtonMessageTo(buttonArray, update.sender.id, 'Selecteer');
-      delete watsonUpdate.context.action; //remove the trigger from the context;
+      if (watsontext.length > 0) {
+        bot.sendTextCascadeTo(watsontext,update.sender.id);
+      }
 
+      setTimeout(function () {
+        const buttonArray = ['Ja', 'Nee'];
+        bot.sendDefaultButtonMessageTo(buttonArray, update.sender.id, lastEntry);
+        delete watsonUpdate.context.action; //remove the trigger from the context;
+      }, 1000);
+    } else {
+      const watsontext = watsonUpdate.output.text;
+      bot.sendTextCascadeTo(watsontext,update.sender.id);
     }
 
     if (watsonUpdate.context.action === "call_skyscanner") {
@@ -150,4 +108,12 @@ function callWatson(bot, update) {
       });
     }
   });
-}
+});
+
+botmaster.on('server running', (message) => {
+  console.log(message);
+});
+
+botmaster.on('error', (bot, err) => {
+  console.log(err.stack);
+});

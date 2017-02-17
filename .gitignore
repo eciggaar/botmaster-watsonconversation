@@ -5,3 +5,4 @@ npm-debug.log
 .env
 airport_entities.csv
 manifest.yml
+views

@@ -16,7 +16,7 @@
     "url": "santabotv2"
   },
   "engines": {
-    "node": ">= 4.x",
+    "node": "^6.9.1",
     "npm": "^3.10.8"
   },
   "dependencies": {

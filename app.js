@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 const request = require('request-promise');
 const incomingMiddleware = require('./middleware/incoming');
 
-
 const appEnv = cfenv.getAppEnv();
 
 // Load environment variables from local .env when running locally. Otherwise use values from Bluemix

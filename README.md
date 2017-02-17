@@ -1,6 +1,6 @@
 # Botmaster | Messenger | Watson Conversation
 <div align="center">
-Powered by <img src="https://botmasterai.com/images/botmaster_light.svg" width="100">
+Powered by <img src="http://botmasterai.com/images/botmaster_light.svg" width="100">
 </div>
 
 Botmaster framework with IBM Watson Conversation dependencies to deploy Facebook messenger bot. Botmaster is a lightweight highly extendable, highly configurable chatbot framework. It was meant to be used both in small scale and large scale projects. Its purpose is to integrate your chatbot into a variety of messaging channels.

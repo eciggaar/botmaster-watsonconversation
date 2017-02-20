@@ -1,0 +1,24 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: eu-gb.mybluemix.net
+  name: myWatsonBotmaster
+  host: myWatsonBotmaster-${random-word}
+  disk_quota: 512M
+  env:
+    WATSON_CONVERSATION_LANG: 'your_supported_language'
+    WATSON_CONVERSATION_USERNAME: 'your_service_detail_username'
+    WATSON_CONVERSATION_PASSWORD: 'your_service_detail_password'
+    WATSON_WORKSPACE_ID: 'your_workspace_id'
+    FACEBOOK_PAGE_TOKEN: 'your_facebook_page_token'
+    FACEBOOK_VERIFY_TOKEN: 'your_facebook_verify_token'
+    FACEBOOK_APP_SECRET: 'your_facebook_app_secret'
+    SLACK_CLIENT_ID: 'optional_your_slack_client_id'
+    SLACK_CLIENT_SECRET: 'optional_your_slack_client_secret'
+    SLACK_VERIFY_TOKEN: 'optional_your_verify_token'
+    SKYSCANNER_API_KEY: 'optional_your_skyscanner_apikey'
+    SKYSCANNER_COUNTRY: 'optional_your_skyscanner_country'
+    SKYSCANNER_CURRENCY: 'optional_your_skyscanner_currency'
+    SKYSCANNER_LOCALE: 'optional_your_skyscanner_locale'
+    SKYSCANNER_SCHEMA: 'optional_your_skyscanner_schema'

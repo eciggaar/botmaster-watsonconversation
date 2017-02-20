@@ -167,7 +167,7 @@ watsonUpdate.output.action === 'weather';
 ```
 #Additional Links
 
-Botmaster Documentation : [Botmaster Documentation] (https://Botmasterai.github.io/)
+Botmaster Documentation : [Botmaster Documentation] (https://botmasterai.com/)
 
 Facebook Messenger Webhook Reference : [Facebook Webhooks] (https://developers.facebook.com/docs/messenger-platform/webhook-reference#setup)
 

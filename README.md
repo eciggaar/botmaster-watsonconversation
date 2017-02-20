@@ -172,5 +172,3 @@ Botmaster Documentation : [Botmaster Documentation] (https://Botmasterai.github.
 Facebook Messenger Webhook Reference : [Facebook Webhooks] (https://developers.facebook.com/docs/messenger-platform/webhook-reference#setup)
 
 Watson Conversation Documentation : [Watson Conversation] (http://www.ibm.com/watson/developercloud/doc/conversation/index.html)
-
-Santa Bot Example App : [Santa Bot] (fb.me/santachatbot)

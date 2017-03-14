@@ -5,7 +5,8 @@ const cfenv = require('cfenv');
 const dotenv = require('dotenv');
 const request = require('request-promise');
 const incomingMiddleware = require('./middleware/incoming');
-
+const {fulfillOutgoingWare} = require('botmaster-fulfill');
+const actions = require('botmaster-fulfill-actions');
 const appEnv = cfenv.getAppEnv();
 
 // Load environment variables from local .env when running locally. Otherwise use values from Bluemix
@@ -59,6 +60,11 @@ botmaster.addBot(messengerBot);
 botmaster.use('incoming', watsonConversationStorageMiddleware.retrieveSession);
 botmaster.use('incoming', { type: 'messenger' }, incomingMiddleware.userInfo.addUserInfoToUpdate);
 
+botmaster.use('incoming', (bot, update, next) => {
+    bot.sendIsTypingMessageTo(update.sender.id);
+    next();
+});
+
 botmaster.on('update', (bot, update) => {
   console.log(update);
 
@@ -108,6 +114,10 @@ botmaster.on('update', (bot, update) => {
     }
   });
 });
+
+botmaster.use('outgoing', fulfillOutgoingWare({
+  actions
+}));
 
 botmaster.on('server running', (message) => {
   console.log(message);

@@ -16,12 +16,14 @@
     "url": "santabotv2"
   },
   "engines": {
-    "node": "^6.9.1",
-    "npm": "^3.10.8"
+    "node": "^6.9.5",
+    "npm": "^3.10.10"
   },
   "dependencies": {
     "request-promise": "^4.1.1",
     "botmaster": "^2.2.4",
+    "botmaster-fulfill": "^3.1.2",
+    "botmaster-fulfill-actions": "^1.0.0",
     "cfenv": "^1.0.3",
     "dotenv": "^4.0.0",
     "request": "^2.72.0",
